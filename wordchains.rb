@@ -10,6 +10,26 @@ class WordChainer
     @dictionary = Set.new(File.new(dict_file_name).readlines.map(&:chomp))
   end
 
+  def run(source, target)
+    words_to_check = [source]
+    found_words = [source]
+    self.dictionary.delete(source)
+
+
+    until words_to_check.empty?
+      current = words_to_check.shift
+      adjacent_words(current).each do |word|
+        self.dictionary.delete(word)
+        words_to_check << word.dup
+        found_words << word.dup
+        return found_words if word == target
+      end
+    end
+
+    found_words
+  end
+
+
   def adjacent_words(word)
     words = []
     (0...word.length).each do |pos|
