@@ -5,7 +5,6 @@ class WordChainer
 
   LETTERS = ('a'..'z').to_a.join('')
 
-
   def initialize(dict_file_name = './dictionary.txt')
     @dictionary = Set.new(File.new(dict_file_name).readlines.map(&:chomp))
   end
@@ -22,13 +21,16 @@ class WordChainer
         self.dictionary.delete(word)
         words_to_check << word.dup
         found_words[word.dup] = current
-        return found_words if word == target
+        return build_path(target, found_words) if word == target
       end
     end
-
-    found_words
+    nil
   end
 
+  def build_path(target, found_words)
+    return [target] if found_words[target].nil?
+    [target] + build_path(found_words[target], found_words)
+  end
 
   def adjacent_words(word)
     words = []
@@ -39,6 +41,5 @@ class WordChainer
     end
     words.select{ |wrd| self.dictionary.include?(wrd)}
   end
-
 
 end
