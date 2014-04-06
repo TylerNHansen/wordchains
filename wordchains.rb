@@ -12,7 +12,7 @@ class WordChainer
 
   def run(source, target)
     words_to_check = [source]
-    found_words = [source]
+    found_words = { source => nil}
     self.dictionary.delete(source)
 
 
@@ -21,7 +21,7 @@ class WordChainer
       adjacent_words(current).each do |word|
         self.dictionary.delete(word)
         words_to_check << word.dup
-        found_words << word.dup
+        found_words[word.dup] = current
         return found_words if word == target
       end
     end
